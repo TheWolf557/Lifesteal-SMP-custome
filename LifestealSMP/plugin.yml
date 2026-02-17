@@ -1,0 +1,6 @@
+name: LifestealSMP
+version: 1.0
+main: me.nova.lifesteal.LifestealSMP
+api-version: 1.21
+author: Nova
+description: Lifesteal Hardcore SMP Plugin
