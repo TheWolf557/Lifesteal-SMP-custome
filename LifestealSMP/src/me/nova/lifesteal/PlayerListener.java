@@ -3,6 +3,7 @@ package me.nova.lifesteal;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,7 +21,12 @@ public class PlayerListener implements Listener {
         Player killer = victim.getKiller();
 
         // Quitar corazón al que murió
-        double victimHealth = victim.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
+        AttributeInstance victimAttribute = victim.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        if (victimAttribute == null) {
+            return;
+        }
+
+        double victimHealth = victimAttribute.getBaseValue();
         victimHealth -= HEART_VALUE;
 
         if (victimHealth <= 0) {
@@ -34,18 +40,23 @@ public class PlayerListener implements Listener {
             return;
         }
 
-        victim.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(victimHealth);
+        victimAttribute.setBaseValue(victimHealth);
 
         // Dar corazón al killer
         if (killer != null) {
-            double killerHealth = killer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
+            AttributeInstance killerAttribute = killer.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+            if (killerAttribute == null) {
+                return;
+            }
+
+            double killerHealth = killerAttribute.getBaseValue();
 
             if (killerHealth < MAX_HEALTH) {
                 killerHealth += HEART_VALUE;
                 if (killerHealth > MAX_HEALTH) {
                     killerHealth = MAX_HEALTH;
                 }
-                killer.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(killerHealth);
+                killerAttribute.setBaseValue(killerHealth);
             }
         }
     }
